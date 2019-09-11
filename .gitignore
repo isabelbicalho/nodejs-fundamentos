@@ -1,0 +1,7 @@
+node_modules
+package-lock.json
+*.marko.js
+*.swp
+!spec/**/*.swp
+!spec/**/*.marko.js
+data.db
