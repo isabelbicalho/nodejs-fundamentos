@@ -9,10 +9,7 @@ tabelaLivros.addEventListener('click', (evento) => {
 
                 let tr = elementoClicado.closest(`#livro_${livroId}`);
                 tr.remove();
-
             })
             .catch(erro => console.log(erro));
-
     }
-
 });
