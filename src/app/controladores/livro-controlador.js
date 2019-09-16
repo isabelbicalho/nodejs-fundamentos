@@ -2,11 +2,14 @@ const { validationResult } = require('express-validator/check');
 const LivroDao = require('../infra/livro-dao');
 const db = require('../../config/database');
 
+const templates = require('../views');
+
 
 class LivroControlador {
 
     static rotas() {
         return {
+            autenticadas: '/livros*',
             lista: '/livros',
             cadastro: '/livros/form',
             edicao: '/livros/form/:id',
@@ -18,14 +21,14 @@ class LivroControlador {
         return  (req, resp) => {
             const livroDao = new LivroDao(db);
             livroDao.lista().then(livros => {
-                resp.marko(require('../views/livros/lista'), { livros })
+                resp.marko(templates.livros.lista, { livros })
             }).catch(erro => console.log(erro));
         };
     }
 
     formularioCadastro() {
         return (req, resp) => {
-            resp.marko(require('../views/livros/form'), { livro: {} })
+            resp.marko(templates.livros.form, { livro: {} })
         };
     }
 
@@ -34,7 +37,7 @@ class LivroControlador {
             const id = req.params.id;
             const livroDao = new LivroDao(db);
             livroDao.buscaPorId(id).then(livro => {
-                resp.marko(require('../views/livros/form'), { livro: livro })
+                resp.marko(templates.livros.form, { livro: livro })
             }).catch(erro => console.log(erro));
         };
     }
@@ -46,7 +49,7 @@ class LivroControlador {
 
             const erros = validationResult(req);
             if (!erros.isEmpty()) {
-                return resp.marko(require('../views/livros/form'), { livro: {}, errosValidacao: erros.array() })
+                return resp.marko(templates.livros.form, { livro: {}, errosValidacao: erros.array() })
             }
 
             livroDao.adiciona(req.body).then(resp.redirect(LivroControlador.rotas().lista)).catch(erro => console.log(erro));
